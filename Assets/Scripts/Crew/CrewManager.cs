@@ -2138,9 +2138,9 @@ public class CrewManager : MonoBehaviour
                     }
 
                     if (
-                        crew.currentJob == CrewJob.Building &&
-                        crew.crewData.assignedBuildingName == building.buildingName
-                    )
+    crew.crewData.islandJob == CrewIslandJob.Building &&
+    crew.crewData.assignedBuildingName == building.buildingName
+)
                     {
                         builderAssigned++;
 
