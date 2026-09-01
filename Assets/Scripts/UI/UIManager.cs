@@ -111,6 +111,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button removeFishingButton;
     [SerializeField] private Button addFishingButton;
 
+    [Header("Builder Controls")]
+    [SerializeField] private Button removeBuilderButton;
+    [SerializeField] private Button addBuilderButton;
+
     private void Awake()
     {
         Instance = this;
@@ -121,6 +125,7 @@ public class UIManager : MonoBehaviour
         SetupFishingButtons();
         BindMissionButtons();
         BindFishingButtons();
+        BindBuilderButtons();
     }
 
     private void SetupFishingButtons()
@@ -138,6 +143,44 @@ public class UIManager : MonoBehaviour
             addFishingButton.onClick.RemoveAllListeners();
             addFishingButton.onClick.AddListener(
                 CrewManager.Instance.AddFishingCrew
+            );
+        }
+    }
+
+    private void BindBuilderButtons()
+    {
+        if (CrewManager.Instance == null)
+        {
+            Debug.LogWarning(
+                "BUILDER BUTTON BIND FAILED | CrewManager not ready."
+            );
+
+            return;
+        }
+
+        if (addBuilderButton != null)
+        {
+            addBuilderButton.onClick.RemoveAllListeners();
+
+            addBuilderButton.onClick.AddListener(
+                CrewManager.Instance.AddBuilderCrew
+            );
+
+            Debug.Log(
+                "BUILDER + BUTTON BOUND TO CURRENT CREWMANAGER"
+            );
+        }
+
+        if (removeBuilderButton != null)
+        {
+            removeBuilderButton.onClick.RemoveAllListeners();
+
+            removeBuilderButton.onClick.AddListener(
+                CrewManager.Instance.RemoveBuilderCrew
+            );
+
+            Debug.Log(
+                "BUILDER - BUTTON BOUND TO CURRENT CREWMANAGER"
             );
         }
     }
