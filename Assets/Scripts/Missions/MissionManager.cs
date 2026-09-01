@@ -1105,13 +1105,12 @@ public class MissionManager : MonoBehaviour
          * Return the crew count to the island.
          */
 
-        GameManager.Instance
-            .availableCrew +=
-            missionCrewCount;
-
-
+        /*
+ * Crew availability is calculated from CrewData.
+ * ReturnCrew() will recalculate it after the voyage crew
+ * has been marked as home.
+ */
         missionCrewCount = 0;
-
         crewAssigned = 0;
 
 

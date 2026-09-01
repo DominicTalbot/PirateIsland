@@ -787,15 +787,6 @@ public class VoyageShipController : MonoBehaviour
                 voyage
             );
 
-
-        if (
-            MissionManager.Instance !=
-            null
-        )
-        {
-            MissionManager.Instance
-                .CompleteVoyageReturn();
-        }
     }
 
 

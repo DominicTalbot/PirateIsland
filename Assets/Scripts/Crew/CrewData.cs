@@ -65,6 +65,8 @@ public class CrewData
     public CrewIslandJob previousIslandJob =
     CrewIslandJob.Idle;
 
+    public bool returningFromVoyage;
+
 
     // =========================================================
     // CONSTRUCTOR
@@ -98,5 +100,8 @@ public class CrewData
 
         shipRole =
             VoyageRole.Sailor;
+
+        returningFromVoyage =
+            false;
     }
 }

@@ -1216,81 +1216,106 @@ public class CrewManager : MonoBehaviour
 
     public void ReturnCrew()
     {
-        CleanupCrewReferences();
+        Debug.Log("===== RETURNING VOYAGE CREW =====");
 
-
-        Debug.Log(
-            "===== RETURNING VOYAGE CREW ====="
-        );
-
-
-        foreach (
-            CrewMovement crew
-            in crewMembers
-        )
+        if (crewData == null || crewData.Count == 0)
         {
-            if (crew == null)
+            Debug.LogWarning("RETURN CREW: No persistent crew data found.");
+            return;
+        }
+
+        int returnedCount = 0;
+
+        /*
+         * IMPORTANT:
+         *
+         * Do NOT iterate crewMembers here.
+         *
+         * CrewMovement objects belong to the Island scene and may not exist
+         * while the VoyageScene is loaded.
+         *
+         * CrewData is persistent and survives the scene change.
+         */
+
+        foreach (CrewData data in crewData)
+        {
+            if (data == null)
             {
                 continue;
             }
 
-
-            if (
-                crew.crewData == null ||
-                !crew.crewData.isOnVoyage
-            )
+            if (!data.isOnVoyage)
             {
                 continue;
             }
 
+            string crewId = data.crewId;
 
-            string crewId =
-                crew.crewData.crewId;
+            /*
+             * Remember that this crew member has just returned.
+             * The Island scene will use this to spawn them at the docks.
+             */
+            data.returningFromVoyage = true;
 
+            /*
+             * Clear the authoritative voyage state.
+             *
+             * This sets:
+             * isOnVoyage = false
+             * assignedShipId = ""
+             * restores previousIslandJob
+             */
+            ClearVoyageState(crewId);
 
-            ClearVoyageState(
-                crewId
-            );
+            /*
+             * The physical CrewMovement may or may not exist.
+             *
+             * If we're currently in a scene containing the physical crew,
+             * update it too.
+             *
+             * If we're in VoyageScene and it doesn't exist, that's fine.
+             * The Island scene will reconnect it from CrewData.
+             */
+            CrewMovement crew = GetCrewById(crewId);
 
-
-            crew.ReconnectToIsland(
-                this
-            );
-
-
-            crew.assignedToMission =
-                false;
-
-
-            crew.currentJob =
-                CrewJob.Idle;
-
-
-            if (
-                dockPoint != null
-            )
+            if (crew != null)
             {
-                crew.transform.position =
-                    dockPoint.position;
+                crew.assignedToMission = false;
+                crew.currentJob = CrewJob.Idle;
+
+                if (dockPoint != null)
+                {
+                    crew.transform.position = dockPoint.position;
+                }
+
+                crew.gameObject.SetActive(true);
+
+                crew.ReturnToIsland();
             }
-
-
-            crew.gameObject.SetActive(
-                true
-            );
-
-
-            crew.ReturnToIsland();
-
 
             Debug.Log(
                 "CREW RETURNED | " +
-                crew.crewData.crewName +
+                data.crewName +
                 " | ID: " +
-                crewId
+                crewId +
+                " | Previous Job: " +
+                data.previousIslandJob
             );
+
+            returnedCount++;
         }
 
+        /*
+         * Recalculate from authoritative CrewData rather than manually
+         * relying on the old runtime crew objects.
+         */
+        RecalculateAvailableCrew();
+
+        Debug.Log(
+            "===== VOYAGE CREW RETURN COMPLETE | Returned: " +
+            returnedCount +
+            " ====="
+        );
 
         PrintCrewStates();
     }
@@ -2243,10 +2268,41 @@ public class CrewManager : MonoBehaviour
             // ISLAND CREW
             // =====================================================
 
-            crew.assignedToMission =
-                false;
+            crew.assignedToMission = false;
 
             crew.ShowIslandRepresentation();
+
+            /*
+             * Crew that has just returned from a voyage should
+             * physically re-enter the island from the docks.
+             */
+            if (data.returningFromVoyage)
+            {
+                if (dockPoint != null)
+                {
+                    crew.transform.position = dockPoint.position;
+
+                    Debug.Log(
+                        "CREW SPAWNED AT DOCKS | " +
+                        data.crewName +
+                        " | ID: " +
+                        data.crewId
+                    );
+
+                    /*
+                     * Consume the flag.
+                     * They have now physically returned to the island.
+                     */
+                    data.returningFromVoyage = false;
+                }
+                else
+                {
+                    Debug.LogWarning(
+                        "CREW RETURN DOCK POINT MISSING | " +
+                        data.crewName
+                    );
+                }
+            }
 
 
             // =====================================================
