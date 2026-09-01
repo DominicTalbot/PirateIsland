@@ -1426,6 +1426,8 @@ public class CrewManager : MonoBehaviour
 
     public void RemoveFishingCrew()
     {
+        Debug.Log("=== REMOVE FISHERMAN BUTTON PRESSED ===");
+
         CleanupCrewReferences();
 
         if (GameManager.Instance == null)

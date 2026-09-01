@@ -108,9 +108,8 @@ public class UIManager : MonoBehaviour
 
     [Header("Fishing Controls")]
 
-    public Button addFishingButton;
-
-    public Button removeFishingButton;
+    [SerializeField] private Button removeFishingButton;
+    [SerializeField] private Button addFishingButton;
 
     private void Awake()
     {
@@ -119,8 +118,28 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        SetupFishingButtons();
         BindMissionButtons();
         BindFishingButtons();
+    }
+
+    private void SetupFishingButtons()
+    {
+        if (removeFishingButton != null)
+        {
+            removeFishingButton.onClick.RemoveAllListeners();
+            removeFishingButton.onClick.AddListener(
+                CrewManager.Instance.RemoveFishingCrew
+            );
+        }
+
+        if (addFishingButton != null)
+        {
+            addFishingButton.onClick.RemoveAllListeners();
+            addFishingButton.onClick.AddListener(
+                CrewManager.Instance.AddFishingCrew
+            );
+        }
     }
 
     private void BindMissionButtons()
