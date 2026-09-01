@@ -577,29 +577,32 @@ public class CrewMovement : MonoBehaviour
         if (fishingSpot == null)
         {
             Debug.LogWarning(
-                "Cannot assign fishing job. " +
-                "Fishing spot is null."
+                "Cannot assign fishing job. Fishing spot is null."
             );
 
             return;
         }
 
-        assignedFishingSpot =
-            fishingSpot;
+        assignedFishingSpot = fishingSpot;
 
-        currentJob =
-            CrewJob.Fishing;
+        currentJob = CrewJob.Fishing;
 
-        workTarget =
-            fishingSpot;
+        workTarget = fishingSpot;
 
-        target =
-            fishingSpot;
+        // ALWAYS make the fishing spot the movement target.
+        target = fishingSpot;
 
-        // Do NOT automatically set working here.
-        // The crew must walk to the fishing spot first.
         working = false;
         atWorkSpot = false;
+
+        Debug.Log(
+            "FISHING JOB ASSIGNED | " +
+            name +
+            " | Target: " +
+            fishingSpot.name +
+            " | Distance: " +
+            Vector3.Distance(transform.position, fishingSpot.position)
+        );
     }
 
     public void AssignBuilderJob(
