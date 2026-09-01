@@ -543,18 +543,6 @@ public class CrewMovement : MonoBehaviour
          */
         if (crewData != null)
         {
-            crewData.islandJob =
-                CrewIslandJob.Idle;
-
-            crewData.assignedBuildingName =
-                "";
-
-            crewData.fishingSpotIndex =
-                -1;
-
-            crewData.wasWorking =
-                false;
-
             crewData.isOnVoyage =
                 false;
 

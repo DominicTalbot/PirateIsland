@@ -1304,156 +1304,123 @@ public class CrewManager : MonoBehaviour
     {
         CleanupCrewReferences();
 
-        // Always rebuild available crew before attempting a new assignment.
-        RecalculateAvailableCrew();
-
-        if (
-            fishingSpots == null ||
-            fishingSpots.Length == 0
-        )
+        if (GameManager.Instance == null)
         {
-            Debug.Log(
-                "No fishing spots available."
-            );
-
+            Debug.LogWarning("ADD FISHER: GameManager missing.");
             return;
         }
 
-
-        if (
-    fishingAssigned >=
-    fishingSpots.Length
-)
+        if (fishingSpots == null || fishingSpots.Length == 0)
         {
-            Debug.Log(
-                "No fishing spots available."
-            );
-
+            Debug.Log("ADD FISHER: No fishing spots available.");
             return;
         }
 
-
-        if (
-            GameManager.Instance
-                .availableCrew <= 0
-        )
+        if (GameManager.Instance.availableCrew <= 0)
         {
+            Debug.Log("ADD FISHER: No available crew.");
             return;
         }
 
+        // Find an actually free fishing spot.
+        Transform freeSpot = null;
+        int freeSpotIndex = -1;
 
-        foreach (
-            CrewMovement crew
-            in crewMembers
-        )
+        for (int i = 0; i < fishingSpots.Length; i++)
         {
-            if (crew == null)
-            {
+            if (fishingSpots[i] == null)
                 continue;
+
+            bool occupied = false;
+
+            foreach (CrewMovement otherCrew in crewMembers)
+            {
+                if (otherCrew == null)
+                    continue;
+
+                if (otherCrew.currentJob == CrewJob.Fishing &&
+                    otherCrew.assignedFishingSpot == fishingSpots[i])
+                {
+                    occupied = true;
+                    break;
+                }
             }
 
-
-            if (
-                crew.currentJob ==
-                CrewJob.Idle
-            )
+            if (!occupied)
             {
-                Transform fishingSpot =
-                    null;
-
-
-                for (
-                    int i = 0;
-                    i < fishingSpots.Length;
-                    i++
-
-
-                )
-                {
-                    bool occupied =
-                        false;
-
-
-                    foreach (
-                        CrewMovement otherCrew
-                        in crewMembers
-                    )
-                    {
-                        if (
-                            otherCrew == null
-                        )
-                        {
-                            continue;
-                        }
-
-
-                        if (
-                            otherCrew
-                                .assignedFishingSpot ==
-
-
-                            fishingSpots[i]
-                        )
-                        {
-                            occupied = true;
-                            break;
-                        }
-                    }
-
-
-                    if (!occupied)
-                    {
-                        fishingSpot =
-                            fishingSpots[i];
-
-                        break;
-                    }
-                }
-
-
-                if (
-                    fishingSpot == null
-                )
-                {
-                    return;
-                }
-
-
-                fishingAssigned++;
-
-
-                crew.AssignFishingJob(
-    fishingSpot
-);
-
-                if (crew.crewData != null)
-                {
-                    crew.crewData.fishingSpotIndex =
-                        System.Array.IndexOf(
-                            fishingSpots,
-                            fishingSpot
-                        );
-
-                    crew.crewData.wasWorking =
-                        false;
-                }
-
-
-                SetIslandJob(
-                    crew.crewData.crewId,
-                    CrewIslandJob.Fishing
-                );
-
-
+                freeSpot = fishingSpots[i];
+                freeSpotIndex = i;
                 break;
             }
         }
+
+        if (freeSpot == null)
+        {
+            Debug.Log("ADD FISHER: No free fishing spots.");
+            return;
+        }
+
+        // Find genuinely idle island crew.
+        foreach (CrewMovement crew in crewMembers)
+        {
+            if (crew == null || crew.crewData == null)
+                continue;
+
+            if (crew.crewData.isOnVoyage)
+                continue;
+
+            if (crew.currentJob != CrewJob.Idle)
+                continue;
+
+            // Assign the job.
+            crew.currentJob = CrewJob.Fishing;
+            crew.assignedFishingSpot = freeSpot;
+
+            crew.crewData.fishingSpotIndex = freeSpotIndex;
+            crew.crewData.wasWorking = false;
+
+            SetIslandJob(
+                crew.crewData.crewId,
+                CrewIslandJob.Fishing
+            );
+
+            fishingAssigned++;
+
+            Debug.Log(
+                "FISHER ASSIGNED | " +
+                crew.crewData.crewName +
+                " | ID: " +
+                crew.crewData.crewId +
+                " | Spot: " +
+                freeSpot.name +
+                " | Assigned: " +
+                fishingAssigned +
+                " | Working: " +
+                fishingCrew +
+                " | Available: " +
+                GameManager.Instance.availableCrew
+            );
+
+            // Tell CrewMovement to actually start moving.
+            crew.AssignFishingJob(freeSpot);
+
+            RecalculateAvailableCrew();
+
+            return;
+        }
+
+        Debug.Log("ADD FISHER: No idle crew found.");
     }
 
 
     public void FishermanStartedWork()
     {
         fishingCrew++;
+
+        Debug.Log(
+            "FISHERMAN STARTED WORK | Working Fishermen: " +
+            fishingCrew
+        );
     }
 
 
@@ -1461,46 +1428,100 @@ public class CrewManager : MonoBehaviour
     {
         CleanupCrewReferences();
 
+        if (GameManager.Instance == null)
+        {
+            Debug.LogWarning("REMOVE FISHER: GameManager missing.");
+            return;
+        }
+
+        // Find a fisherman to remove.
+        // Prefer one who is actually working.
+        CrewMovement selectedCrew = null;
+
         foreach (CrewMovement crew in crewMembers)
         {
             if (crew == null || crew.crewData == null)
-            {
                 continue;
+
+            if (crew.crewData.isOnVoyage)
+                continue;
+
+            if (crew.currentJob != CrewJob.Fishing)
+                continue;
+
+            if (crew.crewData.wasWorking)
+            {
+                selectedCrew = crew;
+                break;
             }
 
-            if (crew.crewData.islandJob != CrewIslandJob.Fishing)
+            // Keep as fallback in case they're still walking.
+            if (selectedCrew == null)
             {
-                continue;
+                selectedCrew = crew;
             }
-
-            Debug.Log(
-                "REMOVING FISHERMAN | " +
-                crew.crewData.crewName +
-                " | ID: " +
-                crew.crewData.crewId
-            );
-
-            crew.crewData.islandJob =
-                CrewIslandJob.Idle;
-
-            crew.crewData.fishingSpotIndex =
-                -1;
-
-            crew.crewData.wasWorking =
-                false;
-
-            crew.ReturnToIsland();
-
-            break;
         }
 
+        if (selectedCrew == null)
+        {
+            Debug.Log("REMOVE FISHER: No fisherman found.");
+            return;
+        }
+
+        string crewName = selectedCrew.crewData.crewName;
+        string crewId = selectedCrew.crewData.crewId;
+
+        Debug.Log(
+            "REMOVING FISHER | " +
+            crewName +
+            " | ID: " +
+            crewId
+        );
+
+        // If they had actually started working,
+        // remove them from the working fisherman count.
+        if (selectedCrew.crewData.wasWorking)
+        {
+            fishingCrew = Mathf.Max(
+                0,
+                fishingCrew - 1
+            );
+        }
+
+        // Remove the assignment count.
+        fishingAssigned = Mathf.Max(
+            0,
+            fishingAssigned - 1
+        );
+
+        // Clear the fishing spot.
+        selectedCrew.assignedFishingSpot = null;
+
+        // Clear persistent fishing data.
+        selectedCrew.crewData.fishingSpotIndex = -1;
+        selectedCrew.crewData.wasWorking = false;
+
+        // Change persistent island job.
+        SetIslandJob(
+            crewId,
+            CrewIslandJob.Idle
+        );
+
+        // Return crew to idle.
+        selectedCrew.currentJob = CrewJob.Idle;
+
+        selectedCrew.ReturnToIsland();
+
+        // Recalculate instead of manually guessing available crew.
         RecalculateAvailableCrew();
 
         Debug.Log(
-            "FISHERMAN REMOVED | Fishing Assigned: " +
-            fishingAssigned +
-            " | Fishing Working: " +
+            "FISHER REMOVED | " +
+            crewName +
+            " | Working: " +
             fishingCrew +
+            " | Assigned: " +
+            fishingAssigned +
             " | Available: " +
             GameManager.Instance.availableCrew
         );

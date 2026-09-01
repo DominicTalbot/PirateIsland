@@ -106,11 +106,21 @@ public class UIManager : MonoBehaviour
 
     public Button removeCrewButton;
 
+    [Header("Fishing Controls")]
+
+    public Button addFishingButton;
+
+    public Button removeFishingButton;
+
     private void Awake()
     {
         Instance = this;
+    }
 
+    private void Start()
+    {
         BindMissionButtons();
+        BindFishingButtons();
     }
 
     private void BindMissionButtons()
@@ -172,6 +182,44 @@ public class UIManager : MonoBehaviour
         {
             startMissionButton.onClick.AddListener(
                 MissionManager.Instance.StartMission
+            );
+        }
+    }
+
+    private void BindFishingButtons()
+    {
+        if (CrewManager.Instance == null)
+        {
+            Debug.LogWarning(
+                "FISHING BUTTON BIND FAILED | CrewManager not ready."
+            );
+
+            return;
+        }
+
+        if (addFishingButton != null)
+        {
+            addFishingButton.onClick.RemoveAllListeners();
+
+            addFishingButton.onClick.AddListener(
+                CrewManager.Instance.AddFishingCrew
+            );
+
+            Debug.Log(
+                "FISHING + BUTTON BOUND TO CURRENT CREWMANAGER"
+            );
+        }
+
+        if (removeFishingButton != null)
+        {
+            removeFishingButton.onClick.RemoveAllListeners();
+
+            removeFishingButton.onClick.AddListener(
+                CrewManager.Instance.RemoveFishingCrew
+            );
+
+            Debug.Log(
+                "FISHING - BUTTON BOUND TO CURRENT CREWMANAGER"
             );
         }
     }
