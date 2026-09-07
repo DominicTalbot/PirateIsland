@@ -2683,16 +2683,35 @@ public class CrewManager : MonoBehaviour
         if (scene.name == "IslandScene")
         {
             StartCoroutine(
-                RestoreIslandStateDelayed()
+                RebindIslandReferencesDelayed()
             );
         }
     }
 
-    private System.Collections.IEnumerator RestoreIslandStateDelayed()
+    private System.Collections.IEnumerator RebindIslandReferencesDelayed()
     {
+        // Give IslandScene objects time to initialize.
+        yield return null;
         yield return null;
 
-        yield return null;
+        ShipMover shipMover =
+            UnityEngine.Object.FindFirstObjectByType<ShipMover>();
+
+        if (shipMover != null && shipMover.dockPoint != null)
+        {
+            dockPoint = shipMover.dockPoint;
+
+            Debug.Log(
+                "CREW MANAGER DOCK POINT REBOUND: " +
+                dockPoint.name
+            );
+        }
+        else
+        {
+            Debug.LogError(
+                "CREW MANAGER FAILED TO REBIND DOCK POINT."
+            );
+        }
 
         RestoreIslandState();
     }
