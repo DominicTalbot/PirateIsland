@@ -14,6 +14,8 @@ public class UIManager : MonoBehaviour
 
     public GameObject shipyardPanel;
 
+    public GameObject crewSelectionPanel;
+
     [Header("HUD")]
 
     public TextMeshProUGUI goldText;
@@ -120,6 +122,19 @@ public class UIManager : MonoBehaviour
         Instance = this;
     }
 
+    public void OpenCrewSelectionPanel()
+    {
+        if (missionsPanel != null)
+        {
+            missionsPanel.SetActive(false);
+        }
+
+        if (crewSelectionPanel != null)
+        {
+            crewSelectionPanel.SetActive(true);
+        }
+    }
+
     private void Start()
     {
         SetupFishingButtons();
@@ -209,6 +224,10 @@ public class UIManager : MonoBehaviour
         {
             nearbyButton.onClick.AddListener(
                 MissionManager.Instance.SelectNearbyWreck
+            );
+
+            nearbyButton.onClick.AddListener(
+                OpenCrewSelectionPanel
             );
         }
 
