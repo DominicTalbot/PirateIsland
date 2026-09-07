@@ -20,7 +20,7 @@ public class CrewSelectionUI : MonoBehaviour
     public Button confirmCrewButton;
 
     [Header("Selection Settings")]
-    public int maxCrewSelection = 4;
+    public int maxCrewSelection = 5;
 
     private readonly List<CrewMovement> selectedCrew =
         new List<CrewMovement>();
@@ -115,7 +115,7 @@ public class CrewSelectionUI : MonoBehaviour
         }
     }
 
-    private Sprite GetCrewPortrait(string crewId)
+    public Sprite GetCrewPortrait(string crewId)
     {
         switch (crewId)
         {
@@ -227,23 +227,34 @@ public class CrewSelectionUI : MonoBehaviour
         if (selectedCrew.Count == 0)
         {
             Debug.Log("NO CREW SELECTED");
-
             return;
         }
 
         Debug.Log(
-            "CREW SELECTION CONFIRMED | Crew Count: " +
-            selectedCrew.Count
+            "CREW SELECTION CONFIRMED | Crew Count: "
+            + selectedCrew.Count
         );
 
         foreach (CrewMovement crew in selectedCrew)
         {
             Debug.Log(
-                "SELECTED CREW: " +
-                crew.crewData.crewId +
-                " | " +
-                crew.crewData.crewName
+                "SELECTED CREW: "
+                + crew.crewData.crewId
+                + " | "
+                + crew.crewData.crewName
             );
+        }
+
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.DisplaySelectedCrew(selectedCrew);
+
+            gameObject.SetActive(false);
+
+            if (UIManager.Instance.missionsPanel != null)
+            {
+                UIManager.Instance.missionsPanel.SetActive(true);
+            }
         }
     }
 }

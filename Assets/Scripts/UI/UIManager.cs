@@ -1,5 +1,6 @@
-using UnityEngine;
+using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -82,6 +83,12 @@ public class UIManager : MonoBehaviour
 
     public TextMeshProUGUI successChanceText;
 
+    [Header("Selected Crew UI")]
+
+    public Transform selectedCrewContainer;
+
+    public SelectedCrewDisplayUI selectedCrewDisplayTemplate;
+
     [Header("Mission Buttons")]
 
     public Image nearbyWreckImage;
@@ -132,6 +139,69 @@ public class UIManager : MonoBehaviour
         if (crewSelectionPanel != null)
         {
             crewSelectionPanel.SetActive(true);
+        }
+    }
+
+    public void DisplaySelectedCrew(List<CrewMovement> selectedCrew)
+    {
+        if (selectedCrewContainer == null)
+        {
+            Debug.LogWarning("SELECTED CREW DISPLAY FAILED | Container missing.");
+            return;
+        }
+
+        if (selectedCrewDisplayTemplate == null)
+        {
+            Debug.LogWarning("SELECTED CREW DISPLAY FAILED | Template missing.");
+            return;
+        }
+
+        foreach (Transform child in selectedCrewContainer)
+        {
+            if (child != selectedCrewDisplayTemplate.transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        selectedCrewDisplayTemplate.gameObject.SetActive(false);
+
+        CrewSelectionUI selectionUI = null;
+
+        if (crewSelectionPanel != null)
+        {
+            selectionUI =
+                crewSelectionPanel.GetComponent<CrewSelectionUI>();
+        }
+
+        if (selectionUI == null)
+        {
+            Debug.LogWarning(
+                "SELECTED CREW DISPLAY FAILED | CrewSelectionUI missing."
+            );
+
+            return;
+        }
+
+        foreach (CrewMovement crew in selectedCrew)
+        {
+            if (crew == null || crew.crewData == null)
+            {
+                continue;
+            }
+
+            SelectedCrewDisplayUI display =
+                Instantiate(
+                    selectedCrewDisplayTemplate,
+                    selectedCrewContainer
+                );
+
+            display.gameObject.SetActive(true);
+
+            display.Setup(
+                crew,
+                selectionUI.GetCrewPortrait(crew.crewData.crewId)
+            );
         }
     }
 
@@ -569,6 +639,8 @@ public class UIManager : MonoBehaviour
         MissionManager.Instance.currentMission =
             null;
 
+        ClearSelectedCrewDisplay();
+
         buildingPanel.SetActive(false);
 
         missionsPanel.SetActive(true);
@@ -795,5 +867,21 @@ public class UIManager : MonoBehaviour
 
         upgradeProgressText.text =
             percent + "%";
+    }
+
+    public void ClearSelectedCrewDisplay()
+    {
+        if (selectedCrewContainer == null)
+        {
+            return;
+        }
+
+        foreach (Transform child in selectedCrewContainer)
+        {
+            if (child != selectedCrewDisplayTemplate.transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }
     }
 }
