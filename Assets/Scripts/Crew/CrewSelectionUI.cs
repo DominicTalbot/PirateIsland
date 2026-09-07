@@ -64,6 +64,14 @@ public class CrewSelectionUI : MonoBehaviour
 
         selectedCrew.Clear();
 
+        foreach (Transform child in content)
+        {
+            if (child != crewCardTemplate.transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
         foreach (CrewMovement crew in CrewManager.Instance.crewMembers)
         {
             if (crew == null || crew.crewData == null)
@@ -196,11 +204,46 @@ public class CrewSelectionUI : MonoBehaviour
 
     public void BackToMissions()
     {
+        selectedCrew.Clear();
+
+        foreach (CrewCardUI card in content.GetComponentsInChildren<CrewCardUI>())
+        {
+            if (card != crewCardTemplate)
+            {
+                card.SetSelected(false);
+            }
+        }
+
         gameObject.SetActive(false);
 
         if (UIManager.Instance != null && UIManager.Instance.missionsPanel != null)
         {
             UIManager.Instance.missionsPanel.SetActive(true);
+        }
+    }
+
+    public void ConfirmCrewSelection()
+    {
+        if (selectedCrew.Count == 0)
+        {
+            Debug.Log("NO CREW SELECTED");
+
+            return;
+        }
+
+        Debug.Log(
+            "CREW SELECTION CONFIRMED | Crew Count: " +
+            selectedCrew.Count
+        );
+
+        foreach (CrewMovement crew in selectedCrew)
+        {
+            Debug.Log(
+                "SELECTED CREW: " +
+                crew.crewData.crewId +
+                " | " +
+                crew.crewData.crewName
+            );
         }
     }
 }

@@ -11,6 +11,7 @@ public class CrewCardUI : MonoBehaviour
     public TextMeshProUGUI crewStatus;
 
     private Button button;
+    private Image cardBackground;
     private bool isSelected;
 
     private Action<CrewCardUI> selectionCallback;
@@ -21,6 +22,9 @@ public class CrewCardUI : MonoBehaviour
     {
         get { return isSelected; }
     }
+
+    private readonly Color normalColor = new Color(0.68f, 0.68f, 0.68f);
+    private readonly Color selectedColor = new Color(0.82f, 0.65f, 0.25f);
 
     public void Setup(
         CrewMovement crew,
@@ -47,6 +51,7 @@ public class CrewCardUI : MonoBehaviour
         }
 
         button = GetComponent<Button>();
+        cardBackground = GetComponent<Image>();
 
         if (button != null)
         {
@@ -55,6 +60,7 @@ public class CrewCardUI : MonoBehaviour
         }
 
         isSelected = false;
+
         UpdateVisual();
     }
 
@@ -75,18 +81,20 @@ public class CrewCardUI : MonoBehaviour
 
     private void UpdateVisual()
     {
-        if (crewStatus == null)
+        if (crewStatus != null)
         {
-            return;
+            crewStatus.text =
+                isSelected
+                    ? "SELECTED"
+                    : "AVAILABLE";
         }
 
-        if (isSelected)
+        if (cardBackground != null)
         {
-            crewStatus.text = "SELECTED";
-        }
-        else
-        {
-            crewStatus.text = "AVAILABLE";
+            cardBackground.color =
+                isSelected
+                    ? selectedColor
+                    : normalColor;
         }
     }
 }
