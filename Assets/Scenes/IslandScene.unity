@@ -16129,6 +16129,7 @@ MonoBehaviour:
     assignedShipId: 
     shipRole: 0
     previousIslandJob: 0
+    returningFromVoyage: 0
   waypoints:
   - {fileID: 1305148413}
   - {fileID: 1793494301}
@@ -20439,6 +20440,7 @@ MonoBehaviour:
     assignedShipId: 
     shipRole: 0
     previousIslandJob: 0
+    returningFromVoyage: 0
   waypoints:
   - {fileID: 1305148413}
   - {fileID: 1793494301}
@@ -23500,6 +23502,10 @@ MonoBehaviour:
   startMissionButton: {fileID: 485600184}
   addCrewButton: {fileID: 1880162619}
   removeCrewButton: {fileID: 878018373}
+  removeFishingButton: {fileID: 1792486365}
+  addFishingButton: {fileID: 2140946964}
+  removeBuilderButton: {fileID: 1541304172}
+  addBuilderButton: {fileID: 28454740}
 --- !u!4 &1732968899
 Transform:
   m_ObjectHideFlags: 0
@@ -25647,6 +25653,7 @@ MonoBehaviour:
     assignedShipId: 
     shipRole: 0
     previousIslandJob: 0
+    returningFromVoyage: 0
   waypoints:
   - {fileID: 1305148413}
   - {fileID: 1793494301}
@@ -26492,6 +26499,7 @@ MonoBehaviour:
     assignedShipId: 
     shipRole: 0
     previousIslandJob: 0
+    returningFromVoyage: 0
   waypoints:
   - {fileID: 1305148413}
   - {fileID: 1793494301}
