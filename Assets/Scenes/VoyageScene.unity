@@ -10722,7 +10722,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VoyageManager
   activeVoyages: []
   outboundTravelDuration: 20
-  missionDuration: 15
   returnTravelDuration: 20
   destinationApproachPercent: 0.9
   homeApproachPercent: 0.9
@@ -24847,6 +24846,7 @@ MonoBehaviour:
   sailPosition1: {fileID: 659325796}
   sailPosition2: {fileID: 1145859126}
   sailPosition3: {fileID: 1212966198}
+  sailPosition4: {fileID: 500318937}
 --- !u!1 &1942928273
 GameObject:
   m_ObjectHideFlags: 0

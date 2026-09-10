@@ -14,6 +14,7 @@ public class VoyageCrewManager : MonoBehaviour
     public Transform sailPosition1;
     public Transform sailPosition2;
     public Transform sailPosition3;
+    public Transform sailPosition4;
 
     private readonly List<GameObject> spawnedCrew =
         new List<GameObject>();
@@ -214,6 +215,12 @@ public class VoyageCrewManager : MonoBehaviour
                 {
                     sailorIndex++;
                     return sailPosition3;
+                }
+
+                if (sailorIndex == 3)
+                {
+                    sailorIndex++;
+                    return sailPosition4;
                 }
 
                 break;

@@ -16,6 +16,9 @@ public class MissionManager : MonoBehaviour
 
     public int crewAssigned = 0;
 
+    public List<CrewMovement> selectedMissionCrew =
+    new List<CrewMovement>();
+
     [Header("Ship")]
 
     public ShipMover shipMover;
@@ -129,6 +132,42 @@ public class MissionManager : MonoBehaviour
             navyPatrolMission,
             2
         );
+    }
+
+    public void SetSelectedMissionCrew(
+    List<CrewMovement> crew
+)
+    {
+        selectedMissionCrew =
+            new List<CrewMovement>(crew);
+
+        crewAssigned =
+            selectedMissionCrew.Count;
+
+        Debug.Log(
+            "MISSION CREW SET | Count: " +
+            selectedMissionCrew.Count
+        );
+
+        foreach (CrewMovement member in selectedMissionCrew)
+        {
+            if (member == null || member.crewData == null)
+            {
+                continue;
+            }
+
+            Debug.Log(
+                "MISSION CREW | " +
+                member.crewData.crewName +
+                " | ID: " +
+                member.crewData.crewId
+            );
+        }
+
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.UpdateMissionUI();
+        }
     }
 
     private void RebindMissionPoints()
@@ -424,74 +463,50 @@ public class MissionManager : MonoBehaviour
         // FIND EXACT CREW FOR THIS VOYAGE
         // =========================================================
 
-        List<CrewMovement> selectedCrew =
-            new List<CrewMovement>();
-
-        foreach (
-            CrewMovement crew
-            in CrewManager.Instance.crewMembers
-        )
+        if (selectedMissionCrew == null || selectedMissionCrew.Count == 0)
         {
-            if (crew == null)
+            Debug.LogWarning("NO MISSION CREW SELECTED");
+            return;
+        }
+
+        foreach (CrewMovement crew in selectedMissionCrew)
+        {
+            if (crew == null || crew.crewData == null)
             {
-                continue;
+                Debug.LogWarning("INVALID CREW IN MISSION SELECTION");
+                return;
             }
 
-            if (crew.crewData == null)
+            if (crew.currentJob != CrewMovement.CrewJob.Idle)
             {
-                continue;
-            }
-
-            if (
-                crew.currentJob !=
-                CrewMovement.CrewJob.Idle
-            )
-            {
-                continue;
+                Debug.LogWarning(
+                    "SELECTED CREW NOT IDLE | " +
+                    crew.crewData.crewName
+                );
+                return;
             }
 
             if (crew.assignedToMission)
             {
-                continue;
-            }
-
-            selectedCrew.Add(
-                crew
-            );
-
-            if (
-                selectedCrew.Count >=
-                crewAssigned
-            )
-            {
-                break;
-            }
-        }
-
-        // =========================================================
-        // MAKE SURE WE ACTUALLY FOUND ENOUGH CREW
-        // =========================================================
-
-        if (
-            selectedCrew.Count <
-            crewAssigned
-        )
-        {
-            Debug.LogError(
-                "START MISSION FAILED | " +
-                "Requested " +
-                crewAssigned +
-                " crew but only found " +
-                selectedCrew.Count
-            );
-
-            UIManager.Instance
-                .UpdateMissionStatus(
-                    "NOT ENOUGH AVAILABLE CREW"
+                Debug.LogWarning(
+                    "SELECTED CREW ALREADY ASSIGNED | " +
+                    crew.crewData.crewName
                 );
+                return;
+            }
 
-            return;
+            if (crew.crewData.isOnVoyage)
+            {
+                Debug.LogWarning(
+                    "SELECTED CREW ALREADY ON VOYAGE | " +
+                    crew.crewData.crewName
+                );
+                return;
+            }
         }
+
+        List<CrewMovement> selectedCrew =
+            new List<CrewMovement>(selectedMissionCrew);
 
         // =========================================================
         // REMOVE ISLAND SUPPLIES

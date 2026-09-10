@@ -247,7 +247,13 @@ public class CrewSelectionUI : MonoBehaviour
 
         if (UIManager.Instance != null)
         {
-            UIManager.Instance.DisplaySelectedCrew(selectedCrew);
+            MissionManager.Instance.SetSelectedMissionCrew(
+    selectedCrew
+);
+
+            UIManager.Instance.DisplaySelectedCrew(
+                selectedCrew
+            );
 
             gameObject.SetActive(false);
 

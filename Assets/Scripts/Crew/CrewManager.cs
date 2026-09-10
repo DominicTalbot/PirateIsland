@@ -192,7 +192,7 @@ public class CrewManager : MonoBehaviour
                 else
                 {
                     // Create a new CrewData using the explicit starter id (keeps IDs stable).
-                    string newName = GenerateCrewName(i + 1);
+                    string newName = GetPermanentCrewName(prefabId);
 
                     CrewData created =
                         new CrewData(
@@ -314,6 +314,30 @@ public class CrewManager : MonoBehaviour
     )
     {
         return "Crew " + number;
+    }
+
+    private string GetPermanentCrewName(string crewId)
+    {
+        switch (crewId)
+        {
+            case "crew_001":
+                return "Black Jack";
+
+            case "crew_002":
+                return "Scarlett";
+
+            case "crew_003":
+                return "One-Eye";
+
+            case "crew_004":
+                return "Riptide";
+
+            case "crew_005":
+                return "Driftwood";
+
+            default:
+                return GenerateCrewName(crewData.Count + 1);
+        }
     }
 
 
