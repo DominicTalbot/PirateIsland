@@ -143,29 +143,29 @@ public class IslandDataManager : MonoBehaviour
                 switch (edge)
                 {
                     case 0:
-                        neighbourQ++;
+                        neighbourR++;
                         break;
 
                     case 1:
+                        neighbourQ--;
                         neighbourR++;
                         break;
 
                     case 2:
                         neighbourQ--;
-                        neighbourR++;
                         break;
 
                     case 3:
-                        neighbourQ--;
+                        neighbourR--;
                         break;
 
                     case 4:
+                        neighbourQ++;
                         neighbourR--;
                         break;
 
                     case 5:
                         neighbourQ++;
-                        neighbourR--;
                         break;
                 }
 

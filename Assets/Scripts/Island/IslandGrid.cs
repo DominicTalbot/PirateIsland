@@ -45,7 +45,7 @@ public class IslandGrid : MonoBehaviour
             for (int i = 0; i < 6; i++)
             {
                 float angle =
-                    Mathf.Deg2Rad * (60f * i);
+                    Mathf.Deg2Rad * (30f + 60f * i);
 
                 corners[i] =
                     center +
@@ -82,13 +82,13 @@ public class IslandGrid : MonoBehaviour
     {
         float x =
             tileSize *
-            1.5f *
-            q;
+            Mathf.Sqrt(3f) *
+            (q + r * 0.5f);
 
         float z =
             tileSize *
-            Mathf.Sqrt(3f) *
-            (r + q * 0.5f);
+            1.5f *
+            r;
 
         return transform.position +
                new Vector3(x, 0f, z);
