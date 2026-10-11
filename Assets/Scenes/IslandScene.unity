@@ -9647,6 +9647,7 @@ GameObject:
   - component: {fileID: 634603351}
   - component: {fileID: 634603350}
   - component: {fileID: 634603352}
+  - component: {fileID: 634603353}
   m_Layer: 0
   m_Name: IslandSystem
   m_TagString: Untagged
@@ -9668,7 +9669,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IslandGrid
   dataManager: {fileID: 0}
   radius: 4
-  tileSize: 3
+  tileSize: 2.97
 --- !u!4 &634603351
 Transform:
   m_ObjectHideFlags: 0
@@ -9698,6 +9699,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IslandDataManager
   radius: 4
   startingRadius: 2
+--- !u!114 &634603353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 634603349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcb9bba0f3204c94fb5d687488ad195d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IslandTileVisuals
+  tilePrefab: {fileID: 8367256411307009997, guid: 874b5bbe0a55aa94d9e720d7f51558ae, type: 3}
+  tileHeight: 0.055
 --- !u!1 &636548005
 GameObject:
   m_ObjectHideFlags: 0
