@@ -83,6 +83,16 @@ public class IslandTileVisuals : MonoBehaviour
     visualsRoot
 );
 
+            IslandTileSelectable selectable =
+    visualTile.GetComponent<IslandTileSelectable>();
+
+            if (selectable == null)
+            {
+                selectable = visualTile.AddComponent<IslandTileSelectable>();
+            }
+
+            selectable.Initialize(tile);
+
             visualTile.name =
                 $"IslandTile_{tile.q}_{tile.r}";
 
