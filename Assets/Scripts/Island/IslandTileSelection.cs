@@ -1,4 +1,5 @@
 
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,6 +10,9 @@ public class IslandTileSelection : MonoBehaviour
     [SerializeField] private float rayDistance = 1000f;
 
     private IslandTileSelectable selectedTile;
+
+    // Notifies the UI whenever the selected tile changes.
+    public event Action<IslandTile> SelectionChanged;
 
     private void Awake()
     {
@@ -72,15 +76,19 @@ public class IslandTileSelection : MonoBehaviour
                 $"Owned: {data.owned} | " +
                 $"State: {data.tileState}"
             );
+
+            SelectionChanged?.Invoke(data);
         }
     }
 
-    private void ClearSelection()
+    public void ClearSelection()
     {
-        if (selectedTile == null)
-            return;
+        if (selectedTile != null)
+        {
+            selectedTile.SetSelected(false);
+            selectedTile = null;
+        }
 
-        selectedTile.SetSelected(false);
-        selectedTile = null;
+        SelectionChanged?.Invoke(null);
     }
 }
