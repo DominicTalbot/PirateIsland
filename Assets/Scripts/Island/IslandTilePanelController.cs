@@ -7,6 +7,7 @@ public class IslandTilePanelController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private IslandTileSelection tileSelection;
+    [SerializeField] private IslandDataManager islandDataManager;
     [SerializeField] private GameObject tilePanel;
 
     [Header("Tile Information")]
@@ -20,10 +21,19 @@ public class IslandTilePanelController : MonoBehaviour
     [SerializeField] private Button closeButton;
     [SerializeField] private Button developButton;
 
+    private TMP_Text developButtonText;
+    private IslandTile selectedTile;
+
     private void Awake()
     {
         if (tileSelection == null)
             tileSelection = GetComponent<IslandTileSelection>();
+
+        if (islandDataManager == null)
+            islandDataManager = FindFirstObjectByType<IslandDataManager>();
+
+        if (developButton != null)
+            developButtonText = developButton.GetComponentInChildren<TMP_Text>();
 
         if (tilePanel != null)
             tilePanel.SetActive(false);
@@ -55,6 +65,8 @@ public class IslandTilePanelController : MonoBehaviour
 
     private void OnTileSelected(IslandTile tile)
     {
+        selectedTile = tile;
+
         if (tile == null)
         {
             tilePanel.SetActive(false);
@@ -64,11 +76,40 @@ public class IslandTilePanelController : MonoBehaviour
         tileNameText.text = tile.terrainType.ToString().ToUpper();
         coordinatesText.text = $"Coordinates: ({tile.q}, {tile.r})";
         terrainText.text = $"Terrain: {tile.terrainType}";
-        ownershipText.text = tile.owned ? "Ownership: Owned" : "Ownership: Unowned";
+        ownershipText.text = tile.owned
+            ? "Ownership: Owned"
+            : "Ownership: Unowned";
+
         developmentText.text = $"Development: {tile.tileState}";
 
-        // Development functionality will be added separately.
-        developButton.interactable = false;
+        if (tile.owned)
+        {
+            developButton.interactable = false;
+
+            if (developButtonText != null)
+                developButtonText.text = "Develop";
+        }
+        else
+        {
+            int cost = islandDataManager.GetTilePurchaseCost(tile);
+
+            bool connected = islandDataManager.CanPurchaseTile(tile);
+
+            bool canAfford = GameManager.Instance != null &&
+                             GameManager.Instance.gold >= cost;
+
+            developButton.interactable = connected && canAfford;
+
+            if (developButtonText != null)
+            {
+                if (!connected)
+                    developButtonText.text = "Requires Adjacent Land";
+                else if (!canAfford)
+                    developButtonText.text = "Not Enough Gold";
+                else
+                    developButtonText.text = $"Purchase Land - {cost} Gold";
+            }
+        }
 
         tilePanel.SetActive(true);
     }
@@ -80,6 +121,27 @@ public class IslandTilePanelController : MonoBehaviour
 
     private void OnDevelopClicked()
     {
-        Debug.Log("ISLAND TILE | Development system not implemented yet.");
+        if (selectedTile == null)
+            return;
+
+        if (selectedTile.owned)
+        {
+            Debug.Log("ISLAND TILE | Development system not implemented yet.");
+            return;
+        }
+
+        if (islandDataManager == null)
+        {
+            Debug.LogError("ISLAND TILE | IslandDataManager missing.");
+            return;
+        }
+
+        bool purchased = islandDataManager.TryPurchaseTile(selectedTile);
+
+        if (purchased)
+        {
+            tileSelection.RefreshSelectedTileAppearance();
+            OnTileSelected(selectedTile);
+        }
     }
 }

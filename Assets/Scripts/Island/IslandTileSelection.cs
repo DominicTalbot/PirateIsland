@@ -95,4 +95,10 @@ public class IslandTileSelection : MonoBehaviour
         SelectionChanged?.Invoke(null);
         TileTransformSelected?.Invoke(null);
     }
+
+    public void RefreshSelectedTileAppearance()
+    {
+        if (selectedTile != null)
+            selectedTile.RefreshAppearance();
+    }
 }

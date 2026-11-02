@@ -7,6 +7,7 @@ public class IslandTileSelectable : MonoBehaviour
     private IslandTile tileData;
     private Renderer tileRenderer;
     private MaterialPropertyBlock propertyBlock;
+    private bool isSelected;
 
     private readonly Color unownedColor =
         new Color(0.55f, 0.55f, 0.55f, 1f);
@@ -33,14 +34,23 @@ public class IslandTileSelectable : MonoBehaviour
         if (tileRenderer == null || tileData == null)
             return;
 
-        if (selected)
-        {
+        isSelected = selected;
+
+        if (isSelected)
             ApplyColor(selectedColor);
-        }
         else
-        {
             ApplyAppearance();
-        }
+    }
+
+    public void RefreshAppearance()
+    {
+        if (tileRenderer == null || tileData == null)
+            return;
+
+        if (isSelected)
+            ApplyColor(selectedColor);
+        else
+            ApplyAppearance();
     }
 
     private void ApplyAppearance()

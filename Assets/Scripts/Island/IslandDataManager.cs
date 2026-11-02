@@ -126,6 +126,117 @@ public class IslandDataManager : MonoBehaviour
         return null;
     }
 
+    // =========================================================
+    // LAND PURCHASING
+    // =========================================================
+
+    public int GetTilePurchaseCost(IslandTile tile)
+    {
+        if (tile == null)
+            return 0;
+
+        int distance = Mathf.Max(
+            Mathf.Abs(tile.q),
+            Mathf.Abs(tile.r),
+            Mathf.Abs(-tile.q - tile.r)
+        );
+
+        if (distance < 3)
+            return 0;
+
+        return 100 + ((distance - 3) * 75);
+    }
+
+
+    // =========================================================
+    // CHECK ADJACENT OWNED LAND
+    // =========================================================
+
+    private bool HasOwnedNeighbour(IslandTile tile)
+    {
+        int[,] directions =
+        {
+        { 0, 1 },
+        { -1, 1 },
+        { -1, 0 },
+        { 0, -1 },
+        { 1, -1 },
+        { 1, 0 }
+    };
+
+        for (int i = 0; i < 6; i++)
+        {
+            int neighbourQ = tile.q + directions[i, 0];
+            int neighbourR = tile.r + directions[i, 1];
+
+            IslandTile neighbour = GetTile(
+                neighbourQ,
+                neighbourR
+            );
+
+            if (neighbour != null && neighbour.owned)
+                return true;
+        }
+
+        return false;
+    }
+
+
+    // =========================================================
+    // PURCHASE LAND
+    // =========================================================
+
+    public bool CanPurchaseTile(IslandTile tile)
+    {
+        if (tile == null || tile.owned)
+            return false;
+
+        return HasOwnedNeighbour(tile);
+    }
+
+    public bool TryPurchaseTile(IslandTile tile)
+    {
+        if (tile == null)
+            return false;
+
+        if (tile.owned)
+            return false;
+
+        if (!HasOwnedNeighbour(tile))
+        {
+            Debug.Log("LAND PURCHASE FAILED | Tile must connect to owned land.");
+            return false;
+        }
+
+        if (GameManager.Instance == null)
+        {
+            Debug.LogError("LAND PURCHASE FAILED | GameManager missing.");
+            return false;
+        }
+
+        int cost = GetTilePurchaseCost(tile);
+
+        if (!GameManager.Instance.SpendGold(cost))
+        {
+            Debug.Log("LAND PURCHASE FAILED | Not enough gold. Cost: " + cost);
+            return false;
+        }
+
+        tile.owned = true;
+        tile.tileState = IslandTileState.Available;
+
+        UpdateCoastalEdges();
+        AssignCoastalTerrain();
+
+        Debug.Log(
+            "LAND PURCHASED | Coordinates: (" +
+            tile.q + ", " + tile.r +
+            ") | Cost: " + cost + " Gold"
+        );
+
+        return true;
+    }
+
     private void UpdateCoastalEdges()
     {
         foreach (IslandTile tile in tiles)
