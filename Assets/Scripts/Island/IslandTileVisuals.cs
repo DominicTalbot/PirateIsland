@@ -30,71 +30,55 @@ public class IslandTileVisuals : MonoBehaviour
             return;
         }
 
-        if (tilePrefab == null)
+        if (tilePrefab == null || visualsRoot == null)
         {
             Debug.LogError(
-                "ISLAND TILE VISUALS | Assign the GreenHexTile prefab."
+                "ISLAND TILE VISUALS | Tile prefab or visuals root missing."
             );
             return;
         }
 
-        if (visualsRoot == null)
-        {
-            Debug.LogError(
-                "ISLAND TILE VISUALS | Assign IslandTileVisualsRoot."
-            );
-            return;
-        }
-
-        GenerateOwnedTiles();
+        GenerateTiles();
     }
 
-    private void GenerateOwnedTiles()
+    private void GenerateTiles()
     {
         foreach (IslandTile tile in dataManager.Tiles)
         {
-            if (!tile.owned)
-            {
-                continue;
-            }
-
             float tileSize = islandGrid.tileSize;
 
             float x =
-                tileSize *
-                Mathf.Sqrt(3f) *
+                tileSize * Mathf.Sqrt(3f) *
                 (tile.q + tile.r * 0.5f);
 
             float z =
-                tileSize *
-                1.5f *
-                tile.r;
+                tileSize * 1.5f * tile.r;
 
             Vector3 position =
-    visualsRoot.position +
-    new Vector3(x, 0f, z);
+                visualsRoot.position + new Vector3(x, 0f, z);
 
             position.y = tileHeight;
 
             GameObject visualTile = Instantiate(
-    tilePrefab,
-    position,
-    tilePrefab.transform.rotation,
-    visualsRoot
-);
-
-            IslandTileSelectable selectable =
-    visualTile.GetComponent<IslandTileSelectable>();
-
-            if (selectable == null)
-            {
-                selectable = visualTile.AddComponent<IslandTileSelectable>();
-            }
-
-            selectable.Initialize(tile);
+                tilePrefab,
+                position,
+                tilePrefab.transform.rotation,
+                visualsRoot
+            );
 
             visualTile.name =
                 $"IslandTile_{tile.q}_{tile.r}";
+
+            IslandTileSelectable selectable =
+                visualTile.GetComponent<IslandTileSelectable>();
+
+            if (selectable == null)
+            {
+                selectable =
+                    visualTile.AddComponent<IslandTileSelectable>();
+            }
+
+            selectable.Initialize(tile);
 
             spawnedTiles.Add(visualTile);
         }

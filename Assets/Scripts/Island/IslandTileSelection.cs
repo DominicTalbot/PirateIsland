@@ -13,6 +13,7 @@ public class IslandTileSelection : MonoBehaviour
 
     // Notifies the UI whenever the selected tile changes.
     public event Action<IslandTile> SelectionChanged;
+    public event Action<Transform> TileTransformSelected;
 
     private void Awake()
     {
@@ -65,6 +66,8 @@ public class IslandTileSelection : MonoBehaviour
         selectedTile = tile;
         selectedTile.SetSelected(true);
 
+        TileTransformSelected?.Invoke(selectedTile.transform);
+
         IslandTile data = selectedTile.TileData;
 
         if (data != null)
@@ -90,5 +93,6 @@ public class IslandTileSelection : MonoBehaviour
         }
 
         SelectionChanged?.Invoke(null);
+        TileTransformSelected?.Invoke(null);
     }
 }

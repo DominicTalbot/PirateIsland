@@ -8,6 +8,12 @@ public class IslandTileSelectable : MonoBehaviour
     private Renderer tileRenderer;
     private MaterialPropertyBlock propertyBlock;
 
+    private readonly Color unownedColor =
+        new Color(0.55f, 0.55f, 0.55f, 1f);
+
+    private readonly Color selectedColor =
+        new Color(1f, 0.85f, 0.3f, 1f);
+
     public IslandTile TileData => tileData;
 
     private void Awake()
@@ -19,30 +25,50 @@ public class IslandTileSelectable : MonoBehaviour
     public void Initialize(IslandTile data)
     {
         tileData = data;
+        ApplyAppearance();
     }
 
     public void SetSelected(bool selected)
     {
-        if (tileRenderer == null)
+        if (tileRenderer == null || tileData == null)
             return;
 
-        for (int i = 0; i < tileRenderer.sharedMaterials.Length; i++)
+        if (selected)
         {
-            if (selected)
-            {
-                tileRenderer.GetPropertyBlock(propertyBlock, i);
+            ApplyColor(selectedColor);
+        }
+        else
+        {
+            ApplyAppearance();
+        }
+    }
 
-                propertyBlock.SetColor(
-                    "_BaseColor",
-                    new Color(1f, 0.85f, 0.3f, 1f)
-                );
+    private void ApplyAppearance()
+    {
+        if (tileData == null || tileRenderer == null)
+            return;
 
-                tileRenderer.SetPropertyBlock(propertyBlock, i);
-            }
-            else
+        if (tileData.owned)
+        {
+            // Restore the original green and brown prefab materials.
+            for (int i = 0; i < tileRenderer.sharedMaterials.Length; i++)
             {
                 tileRenderer.SetPropertyBlock(null, i);
             }
+        }
+        else
+        {
+            ApplyColor(unownedColor);
+        }
+    }
+
+    private void ApplyColor(Color color)
+    {
+        for (int i = 0; i < tileRenderer.sharedMaterials.Length; i++)
+        {
+            tileRenderer.GetPropertyBlock(propertyBlock, i);
+            propertyBlock.SetColor("_BaseColor", color);
+            tileRenderer.SetPropertyBlock(propertyBlock, i);
         }
     }
 }
