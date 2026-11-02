@@ -1240,20 +1240,25 @@ public class MissionManager : MonoBehaviour
             );
         }
 
-        if (SceneNavigator.Instance != null)
+        if (SceneManager.GetActiveScene().name == "VoyageScene")
         {
-            Debug.Log(
-                "VOYAGE COMPLETE - RETURNING TO ISLAND SCENE"
-            );
+            if (SceneNavigator.Instance != null)
+            {
+                Debug.Log("VOYAGE COMPLETE - RETURNING TO ISLAND SCENE");
 
-            SceneNavigator.Instance.GoToIsland();
+                SceneNavigator.Instance.GoToIsland();
+            }
+            else
+            {
+                Debug.LogError(
+                    "Cannot return to IslandScene. " +
+                    "SceneNavigator is missing."
+                );
+            }
         }
         else
         {
-            Debug.LogError(
-                "Cannot return to IslandScene. " +
-                "SceneNavigator is missing."
-            );
+            Debug.Log("VOYAGE COMPLETE - ALREADY VIEWING ISLAND. NO SCENE RELOAD.");
         }
     }
 
