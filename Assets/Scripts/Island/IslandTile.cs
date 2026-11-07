@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 public enum IslandTerrainType
 {
@@ -23,6 +24,38 @@ public enum IslandEdgeType
     Land,
     Ocean,
     Lake
+}
+
+public enum IslandObstacleType
+{
+    Tree,
+    Rock,
+    Vegetation,
+    Debris
+}
+
+[Serializable]
+public class IslandObstacle
+{
+    public IslandObstacleType obstacleType;
+
+    // Position relative to the centre of its tile
+    public UnityEngine.Vector3 localPosition;
+
+    public float workRequired;
+    public float workRemaining;
+
+    public IslandObstacle(
+        IslandObstacleType type,
+        UnityEngine.Vector3 position,
+        float work
+    )
+    {
+        obstacleType = type;
+        localPosition = position;
+        workRequired = work;
+        workRemaining = work;
+    }
 }
 
 [Serializable]
@@ -57,6 +90,8 @@ public class IslandTile
     // Development
     public string developmentName;
     public int developmentLevel;
+    // Obstacles that need clearing from this tile
+    public List<IslandObstacle> obstacles;
 
     // Six edges around this hex
     public IslandTileEdge[] edges;
@@ -73,6 +108,8 @@ public class IslandTile
         this.terrainType = terrainType;
 
         tileState = IslandTileState.Wild;
+
+        obstacles = new List<IslandObstacle>();
 
         owned = false;
 

@@ -46,7 +46,7 @@ public class IslandDataManager : MonoBehaviour
                 if (IsStartingTile(q, r))
                 {
                     tile.owned = true;
-                    tile.tileState = IslandTileState.Available;
+                    tile.tileState = IslandTileState.Wild;
                 }
 
                 tiles.Add(tile);
