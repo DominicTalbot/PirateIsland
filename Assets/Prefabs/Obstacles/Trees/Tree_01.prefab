@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8009909713669384280
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: c3f552255a5cae749b14f531ee61585d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 341.72562
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c3f552255a5cae749b14f531ee61585d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.000000085524675
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c3f552255a5cae749b14f531ee61585d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -75.893684
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c3f552255a5cae749b14f531ee61585d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071067
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c3f552255a5cae749b14f531ee61585d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c3f552255a5cae749b14f531ee61585d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c3f552255a5cae749b14f531ee61585d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c3f552255a5cae749b14f531ee61585d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c3f552255a5cae749b14f531ee61585d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c3f552255a5cae749b14f531ee61585d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c3f552255a5cae749b14f531ee61585d, type: 3}
+      propertyPath: m_Name
+      value: Tree_01
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c3f552255a5cae749b14f531ee61585d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9090085722575473881}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c3f552255a5cae749b14f531ee61585d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1057274654185537297}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c3f552255a5cae749b14f531ee61585d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2534425670991911405}
+  m_SourcePrefab: {fileID: 100100000, guid: c3f552255a5cae749b14f531ee61585d, type: 3}
+--- !u!1 &7199430219092710665 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c3f552255a5cae749b14f531ee61585d, type: 3}
+  m_PrefabInstance: {fileID: 8009909713669384280}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &9090085722575473881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7199430219092710665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c2fb2abf7324754dbd916c7a79eed2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TreeWindAnimation
+  swaySpeed: 1.2
+  swayAngle: 3
+  secondarySway: 1.5
+--- !u!114 &1057274654185537297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7199430219092710665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 775b22def72450044b76e7730de0ce1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TreeChopAnimation
+  shakeAngle: 2
+  shakeDuration: 0.15
+  fallAngle: 90
+  fallDuration: 1.5
+--- !u!114 &-2534425670991911405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7199430219092710665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 452ed61c1489dd044ad6456440bd6c63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TreeAnimationTest

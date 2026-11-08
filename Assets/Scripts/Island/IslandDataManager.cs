@@ -46,7 +46,7 @@ public class IslandDataManager : MonoBehaviour
                 if (IsStartingTile(q, r))
                 {
                     tile.owned = true;
-                    tile.tileState = IslandTileState.Wild;
+                    tile.tileState = IslandTileState.Available;
                 }
 
                 tiles.Add(tile);
@@ -223,7 +223,10 @@ public class IslandDataManager : MonoBehaviour
         }
 
         tile.owned = true;
-        tile.tileState = IslandTileState.Available;
+
+        GenerateObstacles(tile);
+
+        tile.tileState = IslandTileState.Clearing;
 
         UpdateCoastalEdges();
         AssignCoastalTerrain();
@@ -235,6 +238,66 @@ public class IslandDataManager : MonoBehaviour
         );
 
         return true;
+    }
+
+    private void GenerateObstacles(IslandTile tile)
+    {
+        if (tile == null)
+            return;
+
+        tile.obstacles.Clear();
+
+        int obstacleCount = Random.Range(2, 6);
+
+        for (int i = 0; i < obstacleCount; i++)
+        {
+            IslandObstacleType type =
+                (IslandObstacleType)Random.Range(0, 4);
+
+            Vector2 randomPosition =
+                Random.insideUnitCircle * 1.1f;
+
+            Vector3 localPosition = new Vector3(
+                randomPosition.x,
+                0f,
+                randomPosition.y
+            );
+
+            float workRequired = 5f;
+
+            switch (type)
+            {
+                case IslandObstacleType.Tree:
+                    workRequired = 8f;
+                    break;
+
+                case IslandObstacleType.Rock:
+                    workRequired = 12f;
+                    break;
+
+                case IslandObstacleType.Vegetation:
+                    workRequired = 4f;
+                    break;
+
+                case IslandObstacleType.Debris:
+                    workRequired = 3f;
+                    break;
+            }
+
+            IslandObstacle obstacle = new IslandObstacle(
+                type,
+                localPosition,
+                workRequired
+            );
+
+            tile.obstacles.Add(obstacle);
+        }
+
+        Debug.Log(
+            "OBSTACLES GENERATED | Tile (" +
+            tile.q + ", " + tile.r +
+            ") | Count: " + tile.obstacles.Count
+        );
     }
 
     private void UpdateCoastalEdges()
