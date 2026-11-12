@@ -34,6 +34,19 @@ public enum IslandObstacleType
     Debris
 }
 
+
+public enum IslandDevelopmentType
+{
+    None,
+    Farm,
+    LumberCamp,
+    Fishing,
+    TrainingGround,
+    Storage,
+    Housing
+}
+
+
 [Serializable]
 public class IslandObstacle
 {
@@ -88,6 +101,8 @@ public class IslandTile
     public bool owned;
 
     // Development
+    // Development
+    public IslandDevelopmentType developmentType;
     public string developmentName;
     public int developmentLevel;
     // Obstacles that need clearing from this tile
@@ -113,8 +128,8 @@ public class IslandTile
 
         owned = false;
 
+        developmentType = IslandDevelopmentType.None;
         developmentName = "";
-
         developmentLevel = 0;
 
         edges = new IslandTileEdge[6];
