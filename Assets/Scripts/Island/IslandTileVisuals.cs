@@ -11,11 +11,19 @@ public class IslandTileVisuals : MonoBehaviour
     public float tileHeight = 0.055f;
     public Transform visualsRoot;
 
+    private readonly Dictionary<IslandTile, Transform>
+    developmentVisualRoots = new Dictionary<IslandTile, Transform>();
+
     private IslandDataManager dataManager;
     private IslandGrid islandGrid;
+    private readonly Dictionary<IslandTile, IslandTileSelectable>
+    tileSelectableLookup = new Dictionary<IslandTile, IslandTileSelectable>();
 
     private readonly List<GameObject> spawnedTiles =
         new List<GameObject>();
+
+    private readonly Dictionary<IslandTile, GameObject> tileVisualLookup =
+    new Dictionary<IslandTile, GameObject>();
 
     private void Start()
     {
@@ -81,11 +89,26 @@ public class IslandTileVisuals : MonoBehaviour
             selectable.Initialize(tile);
 
             spawnedTiles.Add(visualTile);
+
+            tileVisualLookup.Add(tile, visualTile);
+
+            tileSelectableLookup.Add(tile, selectable);
         }
 
         Debug.Log(
             "ISLAND TILE VISUALS CREATED | Tiles: " +
             spawnedTiles.Count
         );
+    }
+
+    public GameObject GetTileVisual(IslandTile tile)
+    {
+        if (tile == null)
+            return null;
+
+        if (tileVisualLookup.TryGetValue(tile, out GameObject visual))
+            return visual;
+
+        return null;
     }
 }

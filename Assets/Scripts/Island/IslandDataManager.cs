@@ -223,6 +223,7 @@ public class IslandDataManager : MonoBehaviour
         }
 
         tile.owned = true;
+        tile.isExpansionTile = true;
 
         GenerateObstacles(tile);
 

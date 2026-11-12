@@ -10234,6 +10234,7 @@ GameObject:
   - component: {fileID: 634603353}
   - component: {fileID: 634603354}
   - component: {fileID: 634603355}
+  - component: {fileID: 634603356}
   m_Layer: 0
   m_Name: IslandSystem
   m_TagString: Untagged
@@ -10253,7 +10254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2bc410abbd2cf342b13ceefab69df8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IslandGrid
-  dataManager: {fileID: 0}
+  dataManager: {fileID: 634603352}
   radius: 4
   tileSize: 2.97
 --- !u!4 &634603351
@@ -10328,6 +10329,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IslandTilePanelController
   tileSelection: {fileID: 634603354}
   islandDataManager: {fileID: 634603352}
+  developmentManager: {fileID: 634603356}
   tilePanel: {fileID: 140067975}
   tileNameText: {fileID: 1890386526}
   coordinatesText: {fileID: 1443753778}
@@ -10336,6 +10338,20 @@ MonoBehaviour:
   developmentText: {fileID: 927482775}
   closeButton: {fileID: 1518610024}
   developButton: {fileID: 1751926663}
+--- !u!114 &634603356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 634603349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81ad91f32623b4a47a66e03ba34d3345, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IslandDevelopmentManager
+  developmentDefinitions:
+  - {fileID: 11400000, guid: f6d71aeb2920d4a40a12d9260f32b94c, type: 2}
 --- !u!1 &636548005
 GameObject:
   m_ObjectHideFlags: 0

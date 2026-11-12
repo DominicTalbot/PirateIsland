@@ -8,6 +8,7 @@ public class IslandTilePanelController : MonoBehaviour
     [Header("References")]
     [SerializeField] private IslandTileSelection tileSelection;
     [SerializeField] private IslandDataManager islandDataManager;
+    [SerializeField] private IslandDevelopmentManager developmentManager;
     [SerializeField] private GameObject tilePanel;
 
     [Header("Tile Information")]
@@ -34,6 +35,9 @@ public class IslandTilePanelController : MonoBehaviour
 
         if (developButton != null)
             developButtonText = developButton.GetComponentInChildren<TMP_Text>();
+
+        if (developmentManager == null)
+            developmentManager = FindFirstObjectByType<IslandDevelopmentManager>();
 
         if (tilePanel != null)
             tilePanel.SetActive(false);
@@ -84,10 +88,28 @@ public class IslandTilePanelController : MonoBehaviour
 
         if (tile.owned)
         {
-            developButton.interactable = false;
+            bool canDevelop =
+                developmentManager != null &&
+                developmentManager.CanDevelopTile(tile) &&
+                developmentManager.GetDevelopmentDefinition(
+                    IslandDevelopmentType.Farm
+                ) != null;
+
+            developButton.interactable = canDevelop;
 
             if (developButtonText != null)
-                developButtonText.text = "Develop";
+            {
+                if (canDevelop)
+                    developButtonText.text = "Build Farm";
+                else if (!tile.isExpansionTile)
+                    developButtonText.text = "Starting Island";
+                else if (tile.tileState == IslandTileState.Clearing)
+                    developButtonText.text = "Still Clearing";
+                else if (tile.developmentType != IslandDevelopmentType.None)
+                    developButtonText.text = "Already Developed";
+                else
+                    developButtonText.text = "Unavailable";
+            }
         }
         else
         {
@@ -126,7 +148,20 @@ public class IslandTilePanelController : MonoBehaviour
 
         if (selectedTile.owned)
         {
-            Debug.Log("ISLAND TILE | Development system not implemented yet.");
+            if (developmentManager == null)
+                return;
+
+            bool developed = developmentManager.TryDevelopTile(
+                selectedTile,
+                IslandDevelopmentType.Farm
+            );
+
+            if (developed)
+            {
+                tileSelection.RefreshSelectedTileAppearance();
+                OnTileSelected(selectedTile);
+            }
+
             return;
         }
 

@@ -99,6 +99,7 @@ public class IslandTile
 
     // Ownership
     public bool owned;
+    public bool isExpansionTile;
 
     // Development
     // Development
@@ -127,6 +128,7 @@ public class IslandTile
         obstacles = new List<IslandObstacle>();
 
         owned = false;
+        isExpansionTile = false;
 
         developmentType = IslandDevelopmentType.None;
         developmentName = "";
