@@ -111,4 +111,68 @@ public class IslandTileVisuals : MonoBehaviour
 
         return null;
     }
+
+    public bool ReplaceDevelopmentVisual(
+        IslandTile tile,
+        GameObject developmentPrefab)
+    {
+        if (tile == null || developmentPrefab == null)
+            return false;
+
+        GameObject tileVisual = GetTileVisual(tile);
+
+        if (tileVisual == null)
+        {
+            Debug.LogWarning("DEVELOPMENT VISUAL | Tile visual not found.");
+            return false;
+        }
+
+        if (!developmentVisualRoots.TryGetValue(
+            tile, out Transform visualRoot))
+        {
+            GameObject root = new GameObject("DevelopmentVisualRoot");
+            root.transform.SetParent(tileVisual.transform, false);
+
+            visualRoot = root.transform;
+            developmentVisualRoots.Add(tile, visualRoot);
+        }
+
+        // Remove the previous development visual, if one exists.
+        for (int i = visualRoot.childCount - 1; i >= 0; i--)
+        {
+            Destroy(visualRoot.GetChild(i).gameObject);
+        }
+
+        // Add the complete development prefab.
+        GameObject developmentVisual = Instantiate(
+            developmentPrefab,
+            visualRoot
+        );
+
+        developmentVisual.transform.localPosition = Vector3.zero;
+        developmentVisual.transform.localRotation = Quaternion.identity;
+        developmentVisual.transform.localScale = Vector3.one;
+
+        // Hide the original tile mesh, but keep its collider.
+        Renderer originalRenderer = tileVisual.GetComponent<Renderer>();
+
+        if (originalRenderer != null)
+            originalRenderer.enabled = false;
+
+        // Refresh selection so the new child renderers are recognised.
+        if (tileSelectableLookup.TryGetValue(
+            tile, out IslandTileSelectable selectable))
+        {
+            selectable.RefreshAppearance();
+        }
+
+        Debug.Log(
+            "DEVELOPMENT VISUAL CREATED | " +
+            tile.developmentName +
+            " | Tile: (" + tile.q + ", " + tile.r + ")"
+        );
+
+        return true;
+    }
+
 }

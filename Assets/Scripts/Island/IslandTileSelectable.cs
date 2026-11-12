@@ -1,11 +1,10 @@
 
 using UnityEngine;
 
-[RequireComponent(typeof(Renderer))]
 public class IslandTileSelectable : MonoBehaviour
 {
     private IslandTile tileData;
-    private Renderer tileRenderer;
+    private Renderer[] tileRenderers;
     private MaterialPropertyBlock propertyBlock;
     private bool isSelected;
 
@@ -19,19 +18,25 @@ public class IslandTileSelectable : MonoBehaviour
 
     private void Awake()
     {
-        tileRenderer = GetComponent<Renderer>();
+        tileRenderers = GetComponentsInChildren<Renderer>(true);
         propertyBlock = new MaterialPropertyBlock();
     }
 
     public void Initialize(IslandTile data)
     {
         tileData = data;
+        RefreshRenderers();
         ApplyAppearance();
+    }
+
+    public void RefreshRenderers()
+    {
+        tileRenderers = GetComponentsInChildren<Renderer>(true);
     }
 
     public void SetSelected(bool selected)
     {
-        if (tileRenderer == null || tileData == null)
+        if (tileData == null)
             return;
 
         isSelected = selected;
@@ -44,8 +49,10 @@ public class IslandTileSelectable : MonoBehaviour
 
     public void RefreshAppearance()
     {
-        if (tileRenderer == null || tileData == null)
+        if (tileData == null)
             return;
+
+        RefreshRenderers();
 
         if (isSelected)
             ApplyColor(selectedColor);
@@ -55,30 +62,47 @@ public class IslandTileSelectable : MonoBehaviour
 
     private void ApplyAppearance()
     {
-        if (tileData == null || tileRenderer == null)
+        if (tileData == null || tileRenderers == null)
             return;
 
-        if (tileData.owned)
+        foreach (Renderer tileRenderer in tileRenderers)
         {
-            // Restore the original green and brown prefab materials.
-            for (int i = 0; i < tileRenderer.sharedMaterials.Length; i++)
+            if (tileRenderer == null)
+                continue;
+
+            if (tileData.owned)
             {
-                tileRenderer.SetPropertyBlock(null, i);
+                for (int i = 0; i < tileRenderer.sharedMaterials.Length; i++)
+                {
+                    tileRenderer.SetPropertyBlock(null, i);
+                }
             }
-        }
-        else
-        {
-            ApplyColor(unownedColor);
+            else
+            {
+                ApplyColorToRenderer(tileRenderer, unownedColor);
+            }
         }
     }
 
     private void ApplyColor(Color color)
     {
-        for (int i = 0; i < tileRenderer.sharedMaterials.Length; i++)
+        if (tileRenderers == null)
+            return;
+
+        foreach (Renderer tileRenderer in tileRenderers)
         {
-            tileRenderer.GetPropertyBlock(propertyBlock, i);
+            if (tileRenderer != null)
+                ApplyColorToRenderer(tileRenderer, color);
+        }
+    }
+
+    private void ApplyColorToRenderer(Renderer renderer, Color color)
+    {
+        for (int i = 0; i < renderer.sharedMaterials.Length; i++)
+        {
+            renderer.GetPropertyBlock(propertyBlock, i);
             propertyBlock.SetColor("_BaseColor", color);
-            tileRenderer.SetPropertyBlock(propertyBlock, i);
+            renderer.SetPropertyBlock(propertyBlock, i);
         }
     }
 }

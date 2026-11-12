@@ -7,6 +7,16 @@ public class IslandDevelopmentManager : MonoBehaviour
     [SerializeField]
     private IslandDevelopmentDefinition[] developmentDefinitions;
 
+    private IslandTileVisuals tileVisuals;
+
+    private void Awake()
+    {
+        tileVisuals = GetComponent<IslandTileVisuals>();
+
+        if (tileVisuals == null)
+            Debug.LogError("DEVELOPMENT MANAGER | IslandTileVisuals missing.");
+    }
+
     public IslandDevelopmentDefinition GetDevelopmentDefinition(
         IslandDevelopmentType type)
     {
@@ -74,6 +84,11 @@ public class IslandDevelopmentManager : MonoBehaviour
         tile.developmentName = definition.displayName;
         tile.developmentLevel = 1;
         tile.tileState = IslandTileState.Developed;
+
+        if (level.completeTilePrefab != null && tileVisuals != null)
+        {
+            tileVisuals.ReplaceDevelopmentVisual(tile, level.completeTilePrefab);
+        }
 
         Debug.Log(
             "TILE DEVELOPED | " +
