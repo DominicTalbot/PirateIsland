@@ -11,10 +11,13 @@ public class IslandDataManager : MonoBehaviour
     private readonly List<IslandTile> tiles =
         new List<IslandTile>();
 
+    private IslandObstacleVisuals obstacleVisuals;
+
     public IReadOnlyList<IslandTile> Tiles => tiles;
 
     private void Awake()
     {
+        obstacleVisuals = GetComponent<IslandObstacleVisuals>();
         GenerateInitialGrid();
     }
 
@@ -228,6 +231,18 @@ public class IslandDataManager : MonoBehaviour
         GenerateObstacles(tile);
 
         tile.tileState = IslandTileState.Clearing;
+
+        // Spawn the visual obstacles for the newly purchased tile.
+        if (obstacleVisuals != null)
+        {
+            obstacleVisuals.SpawnObstaclesForTile(tile);
+        }
+        else
+        {
+            Debug.LogError(
+                "LAND PURCHASED | IslandObstacleVisuals component missing."
+            );
+        }
 
         UpdateCoastalEdges();
         AssignCoastalTerrain();

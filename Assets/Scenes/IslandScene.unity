@@ -9852,6 +9852,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 598497935}
   m_CullTransparentMesh: 1
+--- !u!1 &601878360
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 601878361}
+  m_Layer: 0
+  m_Name: NewIslandCrewWaypoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &601878361
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601878360}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.7, y: 0, z: 40.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &621707045
 GameObject:
   m_ObjectHideFlags: 0
@@ -10292,6 +10323,9 @@ GameObject:
   - component: {fileID: 634603354}
   - component: {fileID: 634603355}
   - component: {fileID: 634603356}
+  - component: {fileID: 634603358}
+  - component: {fileID: 634603357}
+  - component: {fileID: 634603359}
   m_Layer: 0
   m_Name: IslandSystem
   m_TagString: Untagged
@@ -10409,6 +10443,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IslandDevelopmentManager
   developmentDefinitions:
   - {fileID: 11400000, guid: f6d71aeb2920d4a40a12d9260f32b94c, type: 2}
+--- !u!114 &634603357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 634603349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f5e9e3fecf2a57419371154e6cda588, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IslandNavigation
+--- !u!114 &634603358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 634603349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a30a1d20f9736ba44b7a34647784a181, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IslandNavigationTest
+  navigation: {fileID: 634603357}
+  dataManager: {fileID: 634603352}
+  startQ: 0
+  startR: 0
+  destinationQ: 2
+  destinationR: 0
+  blockedQ: 1
+  blockedR: 0
+--- !u!114 &634603359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 634603349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6e27caff3b33f34baefbb74d5545b4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IslandObstacleVisuals
+  treePrefab: {fileID: 7199430219092710665, guid: 648dd386457712d418ef8ed543e1995c, type: 3}
 --- !u!1 &636548005
 GameObject:
   m_ObjectHideFlags: 0
@@ -35580,3 +35659,4 @@ SceneRoots:
   - {fileID: 325402501}
   - {fileID: 2031416557}
   - {fileID: 326084657}
+  - {fileID: 601878361}
