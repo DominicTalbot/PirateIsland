@@ -11,10 +11,14 @@ public class IslandDevelopmentManager : MonoBehaviour
 
     private void Awake()
     {
-        tileVisuals = GetComponent<IslandTileVisuals>();
+        tileVisuals = FindFirstObjectByType<IslandTileVisuals>();
 
         if (tileVisuals == null)
-            Debug.LogError("DEVELOPMENT MANAGER | IslandTileVisuals missing.");
+        {
+            Debug.LogError(
+                "DEVELOPMENT MANAGER | IslandTileVisuals not found."
+            );
+        }
     }
 
     public IslandDevelopmentDefinition GetDevelopmentDefinition(
@@ -50,7 +54,6 @@ public class IslandDevelopmentManager : MonoBehaviour
         return true;
     }
 
-
     public bool TryDevelopTile(
         IslandTile tile,
         IslandDevelopmentType type)
@@ -72,10 +75,18 @@ public class IslandDevelopmentManager : MonoBehaviour
         IslandDevelopmentDefinition.DevelopmentLevel level =
             definition.GetLevel(1);
 
-        if (level == null)
+        if (level == null || level.completeTilePrefab == null)
         {
             Debug.LogWarning(
-                "DEVELOPMENT FAILED | Level 1 missing: " + type
+                "DEVELOPMENT FAILED | Level 1 prefab missing: " + type
+            );
+            return false;
+        }
+
+        if (tileVisuals == null)
+        {
+            Debug.LogError(
+                "DEVELOPMENT FAILED | IslandTileVisuals not found."
             );
             return false;
         }
@@ -85,9 +96,23 @@ public class IslandDevelopmentManager : MonoBehaviour
         tile.developmentLevel = 1;
         tile.tileState = IslandTileState.Developed;
 
-        if (level.completeTilePrefab != null && tileVisuals != null)
+        bool visualCreated = tileVisuals.ReplaceDevelopmentVisual(
+            tile,
+            level.completeTilePrefab
+        );
+
+        if (!visualCreated)
         {
-            tileVisuals.ReplaceDevelopmentVisual(tile, level.completeTilePrefab);
+            tile.developmentType = IslandDevelopmentType.None;
+            tile.developmentName = "";
+            tile.developmentLevel = 0;
+            tile.tileState = IslandTileState.Available;
+
+            Debug.LogWarning(
+                "DEVELOPMENT FAILED | Could not create farm visual."
+            );
+
+            return false;
         }
 
         Debug.Log(
@@ -98,5 +123,4 @@ public class IslandDevelopmentManager : MonoBehaviour
 
         return true;
     }
-
 }
