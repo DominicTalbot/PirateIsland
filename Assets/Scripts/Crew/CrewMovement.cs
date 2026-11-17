@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CrewMovement : MonoBehaviour
@@ -66,6 +67,13 @@ public class CrewMovement : MonoBehaviour
     private bool voyagePersistent;
 
     private Transform dockTarget;
+
+    // Clearing movement
+    private List<Vector3> clearingPath = new List<Vector3>();
+    private int clearingPathIndex;
+    private Vector3 clearingWorkPosition;
+    private IslandClearingManager clearingManager;
+    private bool clearingAtWorkPosition;
 
     public Transform assignedBuilderSpot;
 
@@ -198,6 +206,13 @@ public class CrewMovement : MonoBehaviour
         {
             AnimateWorkingIdle();
 
+            return;
+        }
+
+        // Dedicated movement for clearing workers.
+        if (currentJob == CrewJob.Clearing)
+        {
+            UpdateClearingMovement();
             return;
         }
 
@@ -753,5 +768,128 @@ public class CrewMovement : MonoBehaviour
     {
         working = state;
         atWorkSpot = state;
+    }
+
+    public void AssignClearingJob(
+    IslandTile tile,
+    IslandObstacle obstacle,
+    List<Vector3> path,
+    Vector3 workPosition,
+    IslandClearingManager manager)
+    {
+        if (tile == null || obstacle == null || path == null || manager == null)
+            return;
+
+        currentJob = CrewJob.Clearing;
+
+        clearingPath = new List<Vector3>(path);
+        clearingPathIndex = 0;
+        clearingWorkPosition = workPosition;
+        clearingManager = manager;
+        clearingAtWorkPosition = false;
+
+        target = null;
+        working = false;
+        atWorkSpot = false;
+
+        if (crewData != null)
+        {
+            crewData.islandJob = CrewIslandJob.Clearing;
+            crewData.clearingTileQ = tile.q;
+            crewData.clearingTileR = tile.r;
+            crewData.clearingObstacleIndex = tile.obstacles.IndexOf(obstacle);
+            crewData.wasWorking = false;
+        }
+    }
+
+    private void UpdateClearingMovement()
+    {
+        if (clearingAtWorkPosition)
+        {
+            AnimateWorkingIdle();
+            return;
+        }
+
+        Vector3 destination;
+
+        if (clearingPathIndex < clearingPath.Count)
+        {
+            destination = clearingPath[clearingPathIndex];
+        }
+        else
+        {
+            destination = clearingWorkPosition;
+        }
+
+        Vector3 direction = destination - transform.position;
+        direction.y = 0f;
+
+        if (direction.sqrMagnitude > 0.01f)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                lookRotation,
+                8f * Time.deltaTime
+            );
+        }
+
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            destination,
+            moveSpeed * Time.deltaTime
+        );
+
+        if (visual != null)
+            AnimateHop();
+
+        if (Vector3.Distance(transform.position, destination) < 0.2f)
+        {
+            if (clearingPathIndex < clearingPath.Count)
+            {
+                clearingPathIndex++;
+            }
+            else
+            {
+                clearingAtWorkPosition = true;
+                working = true;
+                atWorkSpot = true;
+
+                if (crewData != null)
+                    crewData.wasWorking = true;
+
+                if (clearingManager != null)
+                    clearingManager.NotifyCrewArrived(this);
+
+                AnimateWorkingIdle();
+            }
+        }
+    }
+
+    public void CompleteClearingJob()
+    {
+        clearingPath.Clear();
+        clearingPathIndex = 0;
+
+        clearingManager = null;
+        clearingAtWorkPosition = false;
+
+        working = false;
+        atWorkSpot = false;
+
+        currentJob = CrewJob.Idle;
+        target = null;
+
+        if (crewData != null)
+        {
+            crewData.islandJob = CrewIslandJob.Idle;
+            crewData.clearingTileQ = int.MinValue;
+            crewData.clearingTileR = int.MinValue;
+            crewData.clearingObstacleIndex = -1;
+            crewData.wasWorking = false;
+        }
+
+        PickNewTargetPublic();
     }
 }

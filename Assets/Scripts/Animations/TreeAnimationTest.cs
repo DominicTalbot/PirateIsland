@@ -20,16 +20,16 @@ public class TreeAnimationTest : MonoBehaviour
         if (treeAnimation == null)
             return;
 
-        // Press T to simulate an axe hit.
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            treeAnimation.PlayChopImpact();
-        }
+        //// Press T to simulate an axe hit.
+        //if (Input.GetKeyDown(KeyCode.T))
+        //{
+        //    treeAnimation.PlayChopImpact();
+        //}
 
-        // Press F to make the tree fall.
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            treeAnimation.Fall(Vector3.right);
-        }
+        //// Press F to make the tree fall.
+        //if (Input.GetKeyDown(KeyCode.F))
+        //{
+        //    treeAnimation.Fall(Vector3.right);
+        //}
     }
 }

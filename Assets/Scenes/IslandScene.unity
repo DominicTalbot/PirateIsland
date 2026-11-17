@@ -10326,6 +10326,7 @@ GameObject:
   - component: {fileID: 634603358}
   - component: {fileID: 634603357}
   - component: {fileID: 634603359}
+  - component: {fileID: 634603360}
   m_Layer: 0
   m_Name: IslandSystem
   m_TagString: Untagged
@@ -10488,6 +10489,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IslandObstacleVisuals
   treePrefab: {fileID: 7199430219092710665, guid: 648dd386457712d418ef8ed543e1995c, type: 3}
+--- !u!114 &634603360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 634603349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a4e8f0f087712243a44b6dbf1420cd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IslandClearingManager
+  workRate: 1
+  chopImpactInterval: 1.2
+  assignmentInterval: 1
+  maxCrewToIslandDistance: 10
+  workDistance: 0.3
 --- !u!1 &636548005
 GameObject:
   m_ObjectHideFlags: 0
@@ -18765,6 +18783,9 @@ MonoBehaviour:
     islandJob: 0
     fishingSpotIndex: 0
     assignedBuildingName: 
+    clearingTileQ: 0
+    clearingTileR: 0
+    clearingObstacleIndex: 0
     wasWorking: 0
     isOnVoyage: 0
     assignedShipId: 
@@ -23704,6 +23725,9 @@ MonoBehaviour:
     islandJob: 0
     fishingSpotIndex: 0
     assignedBuildingName: 
+    clearingTileQ: 0
+    clearingTileR: 0
+    clearingObstacleIndex: 0
     wasWorking: 0
     isOnVoyage: 0
     assignedShipId: 
@@ -29709,7 +29733,7 @@ Transform:
   m_GameObject: {fileID: 1872989726}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.64, y: 0.8, z: 4.27}
+  m_LocalPosition: {x: 0.64, y: 0.8, z: 40.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -29736,6 +29760,9 @@ MonoBehaviour:
     islandJob: 0
     fishingSpotIndex: 0
     assignedBuildingName: 
+    clearingTileQ: 0
+    clearingTileR: 0
+    clearingObstacleIndex: 0
     wasWorking: 0
     isOnVoyage: 0
     assignedShipId: 
@@ -30586,6 +30613,9 @@ MonoBehaviour:
     islandJob: 0
     fishingSpotIndex: 0
     assignedBuildingName: 
+    clearingTileQ: 0
+    clearingTileR: 0
+    clearingObstacleIndex: 0
     wasWorking: 0
     isOnVoyage: 0
     assignedShipId: 
@@ -35534,6 +35564,63 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 555603170895369744, guid: 0dfd2dbf9074a374b8495191b58a2ecd, type: 3}
   m_PrefabInstance: {fileID: 6886173880281389583}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7892668339984543309
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2445661060641073524, guid: ac2c1c27f5fdecc4d964a33d3257453b, type: 3}
+      propertyPath: m_Name
+      value: Farm_Root
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080817127033621658, guid: ac2c1c27f5fdecc4d964a33d3257453b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080817127033621658, guid: ac2c1c27f5fdecc4d964a33d3257453b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080817127033621658, guid: ac2c1c27f5fdecc4d964a33d3257453b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080817127033621658, guid: ac2c1c27f5fdecc4d964a33d3257453b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080817127033621658, guid: ac2c1c27f5fdecc4d964a33d3257453b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080817127033621658, guid: ac2c1c27f5fdecc4d964a33d3257453b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080817127033621658, guid: ac2c1c27f5fdecc4d964a33d3257453b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080817127033621658, guid: ac2c1c27f5fdecc4d964a33d3257453b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080817127033621658, guid: ac2c1c27f5fdecc4d964a33d3257453b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080817127033621658, guid: ac2c1c27f5fdecc4d964a33d3257453b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ac2c1c27f5fdecc4d964a33d3257453b, type: 3}
 --- !u!4 &7894482401351680993 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 36194090425577698, guid: df3e3014b86d4ed4e97fcb1ecc997c4d, type: 3}
@@ -35660,3 +35747,4 @@ SceneRoots:
   - {fileID: 2031416557}
   - {fileID: 326084657}
   - {fileID: 601878361}
+  - {fileID: 7892668339984543309}

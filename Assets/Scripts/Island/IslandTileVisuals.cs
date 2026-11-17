@@ -149,7 +149,7 @@ public class IslandTileVisuals : MonoBehaviour
         }
 
         if (!developmentVisualRoots.TryGetValue(
-            tile, out Transform visualRoot))
+    tile, out Transform visualRoot))
         {
             GameObject root = new GameObject(
                 "DevelopmentVisualRoot"
@@ -160,6 +160,11 @@ public class IslandTileVisuals : MonoBehaviour
             visualRoot = root.transform;
             developmentVisualRoots.Add(tile, visualRoot);
         }
+
+        visualRoot.localRotation = Quaternion.identity;
+
+        visualRoot.localPosition = Vector3.zero;
+        visualRoot.localScale = Vector3.one;
 
         // Remove the previous development visual.
         for (int i = visualRoot.childCount - 1; i >= 0; i--)

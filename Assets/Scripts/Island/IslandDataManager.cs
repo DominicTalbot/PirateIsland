@@ -267,9 +267,6 @@ public class IslandDataManager : MonoBehaviour
 
         for (int i = 0; i < obstacleCount; i++)
         {
-            IslandObstacleType type =
-                (IslandObstacleType)Random.Range(0, 4);
-
             Vector2 randomPosition =
                 Random.insideUnitCircle * 1.1f;
 
@@ -279,38 +276,17 @@ public class IslandDataManager : MonoBehaviour
                 randomPosition.y
             );
 
-            float workRequired = 5f;
-
-            switch (type)
-            {
-                case IslandObstacleType.Tree:
-                    workRequired = 8f;
-                    break;
-
-                case IslandObstacleType.Rock:
-                    workRequired = 12f;
-                    break;
-
-                case IslandObstacleType.Vegetation:
-                    workRequired = 4f;
-                    break;
-
-                case IslandObstacleType.Debris:
-                    workRequired = 3f;
-                    break;
-            }
-
             IslandObstacle obstacle = new IslandObstacle(
-                type,
+                IslandObstacleType.Tree,
                 localPosition,
-                workRequired
+                8f
             );
 
             tile.obstacles.Add(obstacle);
         }
 
         Debug.Log(
-            "OBSTACLES GENERATED | Tile (" +
+            "TREE OBSTACLES GENERATED | Tile (" +
             tile.q + ", " + tile.r +
             ") | Count: " + tile.obstacles.Count
         );

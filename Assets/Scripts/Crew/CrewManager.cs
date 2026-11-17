@@ -2791,7 +2791,7 @@ public class CrewManager : MonoBehaviour
 
 
             islandCrew++;
-            
+
 
             // =====================================================
             // WORKING CREW
@@ -2799,8 +2799,9 @@ public class CrewManager : MonoBehaviour
 
             if (
                 data.islandJob == CrewIslandJob.Fishing ||
-                data.islandJob == CrewIslandJob.Building
-            )
+                data.islandJob == CrewIslandJob.Building ||
+                data.islandJob == CrewIslandJob.Clearing
+)
             {
                 workingCrew++;
 

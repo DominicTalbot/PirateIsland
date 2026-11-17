@@ -17,7 +17,7 @@ MonoBehaviour:
   description: Produces food for your islanders.
   levels:
   - level: 1
-    completeTilePrefab: {fileID: 919132149155446097, guid: 97dfbed45bbb85849b203fdac7ad6139, type: 3}
+    completeTilePrefab: {fileID: 2445661060641073524, guid: ac2c1c27f5fdecc4d964a33d3257453b, type: 3}
     goldCost: 100
   - level: 2
     completeTilePrefab: {fileID: 0}

@@ -23,6 +23,7 @@ public class TreeChopAnimation : MonoBehaviour
     private Quaternion startingRotation;
     private Coroutine activeAnimation;
     private bool hasFallen;
+    private Vector3 lastChopDirection = Vector3.forward;
 
     private void Awake()
     {
@@ -80,13 +81,18 @@ public class TreeChopAnimation : MonoBehaviour
         Debug.Log("TREE | Ground-level fall pivot created.");
     }
 
-    public void PlayChopImpact()
+    public void PlayChopImpact(Vector3 hitDirection)
     {
         if (hasFallen || fallPivot == null)
             return;
 
         if (activeAnimation != null)
             StopCoroutine(activeAnimation);
+
+        hitDirection.y = 0f;
+
+        if (hitDirection.sqrMagnitude > 0.001f)
+            lastChopDirection = hitDirection.normalized;
 
         activeAnimation = StartCoroutine(ChopShake());
     }
@@ -104,9 +110,12 @@ public class TreeChopAnimation : MonoBehaviour
 
             float angle = shakeAngle * strength;
 
+            Vector3 rotationAxis =
+    Vector3.Cross(Vector3.up, lastChopDirection).normalized;
+
             fallPivot.localRotation =
                 startingRotation *
-                Quaternion.Euler(angle, 0f, -angle);
+                Quaternion.AngleAxis(angle, rotationAxis);
 
             yield return null;
         }
