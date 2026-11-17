@@ -36,6 +36,11 @@ public class CrewData
      */
     public string assignedBuildingName = "";
 
+    // Persistent clearing assignment.
+    public int clearingTileQ = int.MinValue;
+    public int clearingTileR = int.MinValue;
+    public int clearingObstacleIndex = -1;
+
 
     /*
      * Whether the crew member had actually reached their

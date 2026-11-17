@@ -15,6 +15,7 @@ public class CrewMovement : MonoBehaviour
         Idle,
         Fishing,
         Building,
+        Clearing,
         Mission,
         Voyage
     }
